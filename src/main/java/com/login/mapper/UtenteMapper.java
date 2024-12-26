@@ -37,6 +37,6 @@ public interface UtenteMapper {
     @Select("SELECT * from users WHERE id = #{id}")
     Utente findById(Long id);
     
-    @Update("UPDATE users SET email = #{email}, username = #{username} WHERE id = #{id}")
+    @Update("UPDATE users SET email = #{email}, username = #{username} " + "WHERE id = #{id}")
     void updateUtente(Utente utente);
 }
