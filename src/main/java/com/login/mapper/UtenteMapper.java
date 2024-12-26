@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.ResultMap;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.login.entity.Utente;
 
@@ -32,4 +33,10 @@ public interface UtenteMapper {
     
     @Select("SELECT EXISTS(SELECT 1 FROM users WHERE username = #{username})")
     boolean existsByUsername(String username);
+    
+    @Select("SELECT * from users WHERE id = #{id}")
+    Utente findById(Long id);
+    
+    @Update("UPDATE users SET email = #{email}, username = #{username} WHERE id = #{id}")
+    void updateUtente(Utente utente);
 }

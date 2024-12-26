@@ -11,7 +11,6 @@ public class Utente {
 	private LocalDateTime dataCreazione;
 	
 	public Utente () {
-		
 	}
 	
 	public Utente (String username, String email, String password, String ruolo) {
