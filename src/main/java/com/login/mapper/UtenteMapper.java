@@ -35,8 +35,12 @@ public interface UtenteMapper {
     boolean existsByUsername(String username);
     
     @Select("SELECT * from users WHERE id = #{id}")
+    @ResultMap("utenteResultMap")
     Utente findById(Long id);
     
     @Update("UPDATE users SET email = #{email}, username = #{username} " + "WHERE id = #{id}")
     void updateUtente(Utente utente);
+    
+    @Select("SELECT username FROM users WHERE id = #{id}")
+    String findUsernameById(Long id);
 }

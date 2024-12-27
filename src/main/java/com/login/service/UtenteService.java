@@ -82,56 +82,56 @@ public class UtenteService {
 
 	@Transactional
 	public Utente aggiornaUtente(Long id, ProfiloUpdateRequest request) {
-	    logger.info("Inizio aggiornamento utente con ID: {}", id);
+		logger.info("Inizio aggiornamento utente con ID: {}", id);
 
-	    // Validazione input
-	    if (request == null) {
-	        throw new RuntimeException("La richiesta non può essere nulla");
-	    }
+		// Validazione input
+		if (request == null) {
+			throw new RuntimeException("La richiesta non può essere nulla");
+		}
 
-	    // Recupera utente esistente
-	    Utente utente = utenteMapper.findById(id);
-	    if (utente == null) {
-	        logger.error("Utente non trovato con ID: {}", id);
-	        throw new RuntimeException("Utente non trovato con ID: " + id);
-	    }
+		// Recupera utente esistente
+		Utente utente = utenteMapper.findById(id);
+		if (utente == null) {
+			logger.error("Utente non trovato con ID: {}", id);
+			throw new RuntimeException("Utente non trovato con ID: " + id);
+		}
 
-	    // Flag per tracciare se ci sono modifiche
-	    boolean modificheEffettuate = false;
+		// Flag per tracciare se ci sono modifiche
+		boolean modificheEffettuate = false;
 
-	    // Verifica username (con null check)
-	    if (request.getUsername() != null && !request.getUsername().equals(utente.getUsername())) {
-	        logger.info("Richiesta modifica username da '{}' a '{}'", utente.getUsername(), request.getUsername());
-	        if (utenteMapper.existsByUsername(request.getUsername())) {
-	            logger.error("Username '{}' già in uso", request.getUsername());
-	            throw new RuntimeException("Username già in uso");
-	        }
-	        utente.setUsername(request.getUsername());
-	        modificheEffettuate = true;
-	    }
+		// Verifica username (con null check)
+		if (request.getUsername() != null && !request.getUsername().equals(utente.getUsername())) {
+			logger.info("Richiesta modifica username da '{}' a '{}'", utente.getUsername(), request.getUsername());
+			if (utenteMapper.existsByUsername(request.getUsername())) {
+				logger.error("Username '{}' già in uso", request.getUsername());
+				throw new RuntimeException("Username già in uso");
+			}
+			utente.setUsername(request.getUsername());
+			modificheEffettuate = true;
+		}
 
-	    // Verifica email (con null check)
-	    if (request.getEmail() != null && !request.getEmail().equals(utente.getEmail())) {
-	        logger.info("Richiesta modifica email da '{}' a '{}'", utente.getEmail(), request.getEmail());
-	        if (utenteMapper.findByEmail(request.getEmail()) != null) {
-	            logger.error("Email '{}' già in uso", request.getEmail());
-	            throw new RuntimeException("Email già in uso");
-	        }
-	        utente.setEmail(request.getEmail());
-	        modificheEffettuate = true;
-	    }
+		// Verifica email (con null check)
+		if (request.getEmail() != null && !request.getEmail().equals(utente.getEmail())) {
+			logger.info("Richiesta modifica email da '{}' a '{}'", utente.getEmail(), request.getEmail());
+			if (utenteMapper.findByEmail(request.getEmail()) != null) {
+				logger.error("Email '{}' già in uso", request.getEmail());
+				throw new RuntimeException("Email già in uso");
+			}
+			utente.setEmail(request.getEmail());
+			modificheEffettuate = true;
+		}
 
-	    // Aggiorna solo se ci sono state modifiche
-	    if (modificheEffettuate) {
-	        logger.info("Dati prima dell'aggiornamento: {}", utente);
-	        utenteMapper.updateUtente(utente);
-	        Utente utenteAggiornato = utenteMapper.findById(id);
-	        logger.info("Dati dopo l'aggiornamento: {}", utenteAggiornato);
-	        return utenteAggiornato;
-	    } else {
-	        logger.info("Nessuna modifica necessaria per utente ID: {}", id);
-	    }
+		// Aggiorna solo se ci sono state modifiche
+		if (modificheEffettuate) {
+			logger.info("Dati prima dell'aggiornamento: {}", utente);
+			utenteMapper.updateUtente(utente);
+			Utente utenteAggiornato = utenteMapper.findById(id);
+			logger.info("Dati dopo l'aggiornamento: {}", utenteAggiornato);
+			return utenteAggiornato;
+		} else {
+			logger.info("Nessuna modifica necessaria per utente ID: {}", id);
+		}
 
-	    return utente;
+		return utente;
 	}
 }
