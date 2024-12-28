@@ -2,11 +2,11 @@ package com.login.service;
 
 import java.time.LocalDateTime;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.login.controller.UtenteController;
 import com.login.dto.LoginRequest;
@@ -14,6 +14,7 @@ import com.login.dto.ProfiloUpdateRequest;
 import com.login.dto.RegisterRequest;
 import com.login.entity.Utente;
 import com.login.mapper.UtenteMapper;
+import com.login.dto.GestoreRegisterRequest;
 
 @Service
 public class UtenteService {
@@ -21,6 +22,7 @@ public class UtenteService {
 	private final UtenteMapper utenteMapper;
 	private final PasswordEncoder passwordEncoder;
 	private static final Logger logger = LoggerFactory.getLogger(UtenteController.class);
+	private static final String CODICE_GESTORE = "GESTORE2024";
 
 	public UtenteService(UtenteMapper utenteMapper, PasswordEncoder passwordEncoder) {
 		this.utenteMapper = utenteMapper;
@@ -31,15 +33,25 @@ public class UtenteService {
 	public void registra(RegisterRequest request) {
 		validateRegistration(request);
 
-		// Crea nuovo utente
 		Utente utente = new Utente();
 		utente.setUsername(request.getUsername());
 		utente.setEmail(request.getEmail());
 		utente.setPassword(passwordEncoder.encode(request.getPassword()));
-		utente.setRuolo("USER");
-		utente.setDataCreazione(LocalDateTime.now());
 
-		// Salva l'utente
+		// Se è una richiesta di tipo GestoreRegisterRequest, impostiamo il ruolo
+		// GESTORE
+		if (request instanceof GestoreRegisterRequest) {
+			GestoreRegisterRequest gestoreRequest = (GestoreRegisterRequest) request;
+			if (!CODICE_GESTORE.equals(gestoreRequest.getCodiceGestore())) {
+				throw new RuntimeException("Codice gestore non valido");
+			}
+			utente.setRuolo("GESTORE");
+			
+		} else {
+			utente.setRuolo("PARTECIPANTE");
+		}
+
+		utente.setDataCreazione(LocalDateTime.now());
 		utenteMapper.insert(utente);
 	}
 
@@ -70,7 +82,7 @@ public class UtenteService {
 	public Utente login(LoginRequest request) {
 		Utente utente = utenteMapper.findByUsername(request.getUsername());
 		if (utente == null) {
-			throw new RuntimeException("Email non trovata");
+			throw new RuntimeException("Username non trovato");
 		}
 
 		if (!passwordEncoder.matches(request.getPassword(), utente.getPassword())) {
@@ -134,4 +146,5 @@ public class UtenteService {
 
 		return utente;
 	}
+
 }

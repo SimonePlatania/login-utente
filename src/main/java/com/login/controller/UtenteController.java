@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.login.dto.GestoreRegisterRequest;
 import com.login.dto.LoginRequest;
 import com.login.dto.ProfiloUpdateRequest;
 import com.login.dto.RegisterRequest;
@@ -30,16 +31,29 @@ public class UtenteController {
 	}
 
 	@PostMapping("/registra")
-	public ResponseEntity<?> registra(@RequestBody RegisterRequest request) {
-		logger.info("Ricevuta richiesta di registrazione per username: {}", request.getUsername());
-		try {
-			utenteService.registra(request);
-			return ResponseEntity.ok("Registrazione completata con successo");
-		} catch (Exception e) {
-			logger.error("Errore durante la registrazione", e);
-			return ResponseEntity.badRequest().body("Errore: " + e.getMessage());
-		}
-	}
+    public ResponseEntity<?> registra(@RequestBody RegisterRequest request) {
+        logger.info("Ricevuta richiesta di registrazione per username: {}", request.getUsername());
+        try {
+            utenteService.registra(request);
+            return ResponseEntity.ok("Registrazione completata con successo");
+        } catch (Exception e) {
+            logger.error("Errore durante la registrazione", e);
+            return ResponseEntity.badRequest().body("Errore: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/registra/gestore")
+    public ResponseEntity<?> registraGestore(@RequestBody GestoreRegisterRequest request) {
+        logger.info("Ricevuta richiesta di registrazione gestore per username: {}", request.getUsername());
+        try {
+            utenteService.registra(request);  // Usa lo stesso metodo registra
+            return ResponseEntity.ok("Registrazione gestore completata con successo");
+        } catch (Exception e) {
+            logger.error("Errore durante la registrazione gestore", e);
+            return ResponseEntity.badRequest().body("Errore: " + e.getMessage());
+        }
+    }
+
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {

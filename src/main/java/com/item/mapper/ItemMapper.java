@@ -58,4 +58,5 @@ public interface ItemMapper {
 	    @Result(property = "gestoreUsername", column = "gestore_username")
 	})
 	List<Item> findByGestoreId(@Param("gestoreId") Long gestoreId);
+	
 }

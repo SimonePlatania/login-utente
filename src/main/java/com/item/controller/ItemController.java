@@ -1,6 +1,7 @@
 package com.item.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import com.item.service.ItemService;
 
 @RestController
 @RequestMapping("/api/items")
+@CrossOrigin
 public class ItemController {
    private final ItemService itemService;
 
@@ -41,4 +43,6 @@ public class ItemController {
    public ResponseEntity<?> getItemsByGestore(@PathVariable Long gestoreId) {
        return ResponseEntity.ok(itemService.findByGestoreId(gestoreId));
    }
+   
+   
 }
