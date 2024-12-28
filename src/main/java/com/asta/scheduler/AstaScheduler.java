@@ -17,7 +17,7 @@ public class AstaScheduler {
         this.astaService = astaService;
     }
 
-    @Scheduled(fixedRate = 60000) // Esegue ogni minuto
+    @Scheduled(fixedRate = 60000) 
     public void checkAsteScadute() {
         logger.info("Avvio controllo aste scadute: {}", java.time.LocalDateTime.now());
         try {

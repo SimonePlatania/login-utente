@@ -33,16 +33,17 @@ public class ItemController {
        }
    }
 
+   //28/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/item-controller/{id} 1)
    @GetMapping("/{id}")
    public ResponseEntity<?> getItem(@PathVariable Long id) {
        Item item = itemService.getItemById(id);
        return item != null ? ResponseEntity.ok(item) : ResponseEntity.notFound().build();
    }
 
+   //28/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/item-controller/gestore/{gestoreId} 2)
    @GetMapping("/gestore/{gestoreId}")
    public ResponseEntity<?> getItemsByGestore(@PathVariable Long gestoreId) {
        return ResponseEntity.ok(itemService.findByGestoreId(gestoreId));
    }
-   
    
 }

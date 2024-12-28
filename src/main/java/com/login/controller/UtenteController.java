@@ -30,6 +30,7 @@ public class UtenteController {
 		this.utenteService = utenteService;
 	}
 
+	//24/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/login-controller/registra 1)
 	@PostMapping("/registra")
     public ResponseEntity<?> registra(@RequestBody RegisterRequest request) {
         logger.info("Ricevuta richiesta di registrazione per username: {}", request.getUsername());
@@ -42,11 +43,12 @@ public class UtenteController {
         }
     }
 
+	//24/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/login-controller/registra/gestore 2)
     @PostMapping("/registra/gestore")
     public ResponseEntity<?> registraGestore(@RequestBody GestoreRegisterRequest request) {
         logger.info("Ricevuta richiesta di registrazione gestore per username: {}", request.getUsername());
         try {
-            utenteService.registra(request);  // Usa lo stesso metodo registra
+            utenteService.registra(request);
             return ResponseEntity.ok("Registrazione gestore completata con successo");
         } catch (Exception e) {
             logger.error("Errore durante la registrazione gestore", e);
@@ -54,7 +56,7 @@ public class UtenteController {
         }
     }
 
-
+  //24/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/login-controller/login 3)
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 		logger.info("Ricevuta richiesta di login per username: {}", request.getUsername());
@@ -66,7 +68,8 @@ public class UtenteController {
 			return ResponseEntity.badRequest().body("Errore: " + e.getMessage());
 		}
 	}
-
+	
+	//24/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/login-controller/{id} 4)
 	@PutMapping("/{id}")
 	public ResponseEntity<?> aggiornaUtente(@PathVariable Long id, @RequestBody ProfiloUpdateRequest request) {
 		logger.info("Ricevuta richiesta di aggiornamento per utente ID: " + id);

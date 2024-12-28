@@ -33,6 +33,7 @@ public class AstaService {
 		return astaMapper.findById(id);
 	}
 
+	////28/12/2024 Simone CREAZIONE ASTA 1)
 	@Transactional
 	public Asta createAsta(CreaAstaRequest request, Long gestoreId) {
 		System.out.println("Request ricevuta: " + request.getItemId());
@@ -81,6 +82,7 @@ public class AstaService {
 
 	}
 
+	//28/12/2024 Simone TUTTE LE VALIDAZIONI NECESSARIE 2)
 	private void validateAstaRequest(CreaAstaRequest request) {
 		if (!request.isStartNow() && request.getDataInizio() == null) {
 			throw new IllegalArgumentException(
@@ -100,6 +102,7 @@ public class AstaService {
 		}
 	}
 
+	////28/12/2024 Simone SERVICE UTILIZZATO PER POTER FARE UN OFFERTA 3)
 	@Transactional
 	public void faiOfferta(Long astaId, Long userId, BigDecimal offerta) {
 		Asta asta = astaMapper.findById(astaId);
@@ -130,6 +133,7 @@ public class AstaService {
 		astaMapper.updateOfferta(asta);
 	}
 
+	//28/12/2024 Simone SERVICE PER POTER TERMINARE UN'ASTA 4)
 	@Transactional
 	public void terminaAsta(Long astaId, Long gestoreId) {
 		Asta asta = astaMapper.findById(astaId);
@@ -155,6 +159,7 @@ public class AstaService {
 		itemMapper.update(item);
 	}
 
+	//28/12/2024 Simone SERVICE PER IL CONTROLLO DELLE ASTE SCADUTE 5)
 	@Transactional
 	public void checkAsteScadute() {
 	    // Aggiungiamo log per debug
@@ -170,6 +175,7 @@ public class AstaService {
 	    }
 	}
 
+	//28/12/2024 Simone SERVICE PER RITROVARE LE ASTE CHE SONO STATE VINTE 6)
 	public List<Asta> getAsteVinte(Long userId) {
 		return astaMapper.findAsteVinte(userId);
 	}

@@ -14,10 +14,8 @@ public class Item {
     private Long gestoreId;
     private String gestoreUsername;
     
-    // Costruttore vuoto necessario per MyBatis
     public Item() {}
     
-    // Getters e setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     

@@ -38,8 +38,7 @@ public class UtenteService {
 		utente.setEmail(request.getEmail());
 		utente.setPassword(passwordEncoder.encode(request.getPassword()));
 
-		// Se è una richiesta di tipo GestoreRegisterRequest, impostiamo il ruolo
-		// GESTORE
+		// 28/12/2024 Simone AGGIUNTA LA POSSIBILITA AD UN GESTORE DI LOGGARSI NEL SISTEMA TRAMITE CODICE
 		if (request instanceof GestoreRegisterRequest) {
 			GestoreRegisterRequest gestoreRequest = (GestoreRegisterRequest) request;
 			if (!CODICE_GESTORE.equals(gestoreRequest.getCodiceGestore())) {
@@ -55,13 +54,14 @@ public class UtenteService {
 		utenteMapper.insert(utente);
 	}
 
+	// 24/12/2024 Simone TUTTE LE VALIDAZIONI NECESSARIE AL FINE DELLA REGISTRAZIONE 0)
 	public void validateRegistration(RegisterRequest request) {
 
 		if (utenteMapper.existsByUsername(request.getUsername())) {
 			throw new RuntimeException("Username già in uso");
 		}
 
-		// Verifica se email già esistente
+		
 		if (utenteMapper.findByEmail(request.getEmail()) != null) {
 			throw new RuntimeException("Email già registrata");
 		}
@@ -92,26 +92,26 @@ public class UtenteService {
 		return utente;
 	}
 
+	// 24/12/2024 Simone AGGIORNAMENTO UTENTE 1)
 	@Transactional
 	public Utente aggiornaUtente(Long id, ProfiloUpdateRequest request) {
 		logger.info("Inizio aggiornamento utente con ID: {}", id);
 
-		// Validazione input
 		if (request == null) {
 			throw new RuntimeException("La richiesta non può essere nulla");
 		}
 
-		// Recupera utente esistente
+		// 24/12/2024 Simone  RECUPERA UTENTE ESISTENTE 2)
 		Utente utente = utenteMapper.findById(id);
 		if (utente == null) {
 			logger.error("Utente non trovato con ID: {}", id);
 			throw new RuntimeException("Utente non trovato con ID: " + id);
 		}
 
-		// Flag per tracciare se ci sono modifiche
+		
 		boolean modificheEffettuate = false;
 
-		// Verifica username (con null check)
+		// 24/12/2024 Simone VERIFICA USERNAME 3)
 		if (request.getUsername() != null && !request.getUsername().equals(utente.getUsername())) {
 			logger.info("Richiesta modifica username da '{}' a '{}'", utente.getUsername(), request.getUsername());
 			if (utenteMapper.existsByUsername(request.getUsername())) {
@@ -122,7 +122,7 @@ public class UtenteService {
 			modificheEffettuate = true;
 		}
 
-		// Verifica email (con null check)
+		// 24/12/2024 Simone VERIFICA EMAIL 4)
 		if (request.getEmail() != null && !request.getEmail().equals(utente.getEmail())) {
 			logger.info("Richiesta modifica email da '{}' a '{}'", utente.getEmail(), request.getEmail());
 			if (utenteMapper.findByEmail(request.getEmail()) != null) {
@@ -132,8 +132,9 @@ public class UtenteService {
 			utente.setEmail(request.getEmail());
 			modificheEffettuate = true;
 		}
-
-		// Aggiorna solo se ci sono state modifiche
+		
+		
+		// 25/12/2024 Simone TRACCIAMENTO BUG, NON RIUSCIVO A VISUALIZZARE I DATI DI UN UTENTE QUANDO LI MODIFICAVO 5)
 		if (modificheEffettuate) {
 			logger.info("Dati prima dell'aggiornamento: {}", utente);
 			utenteMapper.updateUtente(utente);

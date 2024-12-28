@@ -28,7 +28,7 @@ public class AstaController {
        this.astaService = astaService;
    }
 
-   // Creazione asta
+   
    @PostMapping
    public ResponseEntity<?> createAsta(@Valid @RequestBody CreaAstaRequest request, 
                                      @RequestParam Long gestoreId) {
@@ -40,13 +40,13 @@ public class AstaController {
        }
    }
 
-   // Lista aste attive
+   //29/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/asta-controller/attive 1)
    @GetMapping("/attive")
    public ResponseEntity<List<Asta>> getAsteAttive() {
        return ResponseEntity.ok(astaService.getAsteAttive());
    }
 
-   // Dettaglio singola asta
+   //29/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/asta-controller/{id} 2)
    @GetMapping("/{id}")
    public ResponseEntity<?> getAsta(@PathVariable Long id) {
        try {
@@ -56,8 +56,8 @@ public class AstaController {
            return ResponseEntity.notFound().build();
        }
    }
-
-   // Fare un'offerta
+   
+   //29/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/asta-controller/{astaId}/offerte 3)
    @PostMapping("/{astaId}/offerte")
    public ResponseEntity<?> makeOffer(@PathVariable Long astaId,
                                     @RequestParam Long userId,
@@ -70,13 +70,12 @@ public class AstaController {
        }
    }
 
-   // Lista aste vinte da un utente
+ //29/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/asta-controller/vinte/{userId} 4)
    @GetMapping("/vinte/{userId}")
    public ResponseEntity<List<Asta>> getAsteVinte(@PathVariable Long userId) {
        return ResponseEntity.ok(astaService.getAsteVinte(userId));
    }
-
-   // Terminare un'asta manualmente (solo gestore)
+   //29/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/asta-controller/{astaId}/termina 5)
    @PostMapping("/{astaId}/termina")
    public ResponseEntity<?> terminaAsta(@PathVariable Long astaId,
                                       @RequestParam Long gestoreId) {
