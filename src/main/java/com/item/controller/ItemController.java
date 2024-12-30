@@ -1,5 +1,7 @@
 package com.item.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,21 +19,24 @@ import com.item.service.ItemService;
 @RequestMapping("/api/items")
 @CrossOrigin
 public class ItemController {
-   private final ItemService itemService;
+    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
+    private final ItemService itemService;
 
-   public ItemController(ItemService itemService) {
-       this.itemService = itemService;
-   }
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
-   @PostMapping
-   public ResponseEntity<?> createItem(@RequestBody Item item, @RequestParam Long gestoreId) {
-       try {
-           itemService.createItem(item, gestoreId);
-           return ResponseEntity.ok().build();
-       } catch (Exception e) {
-           return ResponseEntity.badRequest().body(e.getMessage());
-       }
-   }
+    @PostMapping
+    public ResponseEntity<?> createItem(@RequestBody Item item, @RequestParam Long gestoreId) {
+        try {
+            logger.info("Ricevuta richiesta di creazione item per gestore ID: {}", gestoreId);
+            itemService.createItem(item, gestoreId);
+            return ResponseEntity.ok(item);
+        } catch (Exception e) {
+            logger.error("Errore durante la creazione dell'item", e);
+            return ResponseEntity.badRequest().body("Errore: " + e.getMessage());
+        }
+    }
 
    //28/12/2024 Simone http://localhost:8080/webjars/swagger-ui/index.html#/item-controller/{id} 1)
    @GetMapping("/{id}")

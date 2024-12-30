@@ -1,9 +1,10 @@
 package com.item.service;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,46 +16,63 @@ import com.login.mapper.UtenteMapper;
 
 @Service
 public class ItemService {
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
 
-	private final ItemMapper itemMapper;
-	private final UtenteMapper utenteMapper;
+    private final ItemMapper itemMapper;
+    private final UtenteMapper utenteMapper;
 
-	public ItemService(ItemMapper itemMapper, UtenteMapper utenteMapper) {
-		this.itemMapper = itemMapper;
-		this.utenteMapper = utenteMapper;
-	}
+    public ItemService(ItemMapper itemMapper, UtenteMapper utenteMapper) {
+        this.itemMapper = itemMapper;
+        this.utenteMapper = utenteMapper;
+    }
 
-	@Transactional
-	public void createItem(Item item, Long gestoreId) {
-		if (!isGestore(gestoreId)) {
-			throw new RuntimeException("Accesso negato: ruolo gestore richiesto");
-		}
+    @Transactional
+    public void createItem(Item item, Long gestoreId) {
+        logger.info("Creazione nuovo item per gestore ID: {}", gestoreId);
+        
+        if (!isGestore(gestoreId)) {
+            logger.error("Tentativo di creazione item da un non-gestore. ID: {}", gestoreId);
+            throw new RuntimeException("Accesso negato: ruolo gestore richiesto");
+        }
 
-		validateItem(item);
+        validateItem(item);
 
-		item.setDataCreazione(LocalDateTime.now());
-		item.setInAsta(false);
-		item.setGestoreId(gestoreId);
+        item.setDataCreazione(LocalDateTime.now());
+        item.setInAsta(false);
+        item.setGestoreId(gestoreId);
 
-		itemMapper.insert(item);
+        String gestoreUsername = utenteMapper.findUsernameById(gestoreId);
+        if (gestoreUsername != null) {
+            item.setGestoreUsername(gestoreUsername);
+        }
 
-	}
+        try {
+            logger.info("Inserimento item nel database");
+            itemMapper.insert(item);
+            logger.info("Item inserito con successo. ID generato: {}", item.getId());
+        } catch (Exception e) {
+            logger.error("Errore durante l'inserimento dell'item", e);
+            throw new RuntimeException("Errore durante l'inserimento dell'item: " + e.getMessage());
+        }
+    }
 
-	private boolean isGestore(Long userId) {
-		Utente utente = utenteMapper.findById(userId);
-		System.out.println("Utente trovato: " + utente);
-		System.out.println("Ruolo: " + utente.getRuolo());
-		return "GESTORE".equals(utente.getRuolo());
-	}
+    private void validateItem(Item item) {
+        logger.info("Validazione item");
+        if (item.getNome() == null || item.getNome().trim().isEmpty()) {
+            throw new IllegalArgumentException("Il nome dell'item è obbligatorio");
+        }
+        if (item.getPrezzoBase() == null) {
+            throw new IllegalArgumentException("Il prezzo base è obbligatorio");
+        }
+        if (item.getRilancioMinimo() == null) {
+            throw new IllegalArgumentException("Il rilancio minimo è obbligatorio");
+        }
+    }
 
-	private void validateItem(Item item) {
-		if (item.getPrezzoBase().compareTo(BigDecimal.ZERO) <= 0) {
-			throw new IllegalArgumentException("Il prezzo base deve essere positivo");
-		}
-		if (item.getRilancioMinimo().compareTo(item.getPrezzoBase()) >= 0) {
-			throw new IllegalArgumentException("Il rilancio minimo deve essere inferiore al prezzo base");
-		}
-	}
+    private boolean isGestore(Long userId) {
+        Utente utente = utenteMapper.findById(userId);
+        return utente != null && "GESTORE".equals(utente.getRuolo());
+    }
 
 	@Transactional
 	public void updateItem(Item item, Long gestoreId) {
