@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.asta.service.AstaService;
 
+//29/12/24 Simone Questa classe mi consente di analizzare ogni minute le aste, in modo tale da poter checkare quando una scade.
 @Component
 public class AstaScheduler {
     

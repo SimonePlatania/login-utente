@@ -20,7 +20,8 @@ import com.login.service.UtenteService;
 
 @RestController
 @RequestMapping("/api/utenti")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
+
 public class UtenteController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UtenteController.class);

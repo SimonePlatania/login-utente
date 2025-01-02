@@ -32,7 +32,4 @@ public class ProfiloUpdateRequest {
 		this.email = email;
 	}
 	
-	
-	
-
 }

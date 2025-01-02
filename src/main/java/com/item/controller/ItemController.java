@@ -17,7 +17,8 @@ import com.item.service.ItemService;
 
 @RestController
 @RequestMapping("/api/items")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*", allowCredentials = "true")
+
 public class ItemController {
     private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
     private final ItemService itemService;

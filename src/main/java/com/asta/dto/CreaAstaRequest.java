@@ -51,6 +51,7 @@ public class CreaAstaRequest {
 			this.dataFine = dataFine;
 		}  
 		
+		//01/01/25 Simone Aggiunto assertTrue, perché fallisce se il secondo parametro diventa false, garantendo che il valore sia true.
 		@AssertTrue(message = "Data inizio è obbligatoria se l'asta non inizia immediatamente")
 		private Boolean isDataInizioValida() {
 			
